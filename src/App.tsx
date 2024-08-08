@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Cam from "./Cam";
+import { twMerge } from "tailwind-merge";
+import { flushSync } from "react-dom";
 
+type Label = "North" | "East" | "South";
 function App() {
-  const [count, setCount] = useState(0)
+  const [interval] = useState(1000);
+  const [selected, setSelected] = useState<Label | null>(null);
+
+  const update = (label: Label) => {
+    if ("startViewTransition" in document) {
+      // @ts-expect-error
+      document.startViewTransition(async () => {
+        flushSync(() => {
+          setSelected((selected) => (selected === label ? null : label));
+        });
+      });
+    } else {
+      setSelected((selected) => (selected === label ? null : label));
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="h-screen bg-black flex items-center justify-center">
+      <div className="grid grid-cols-2 grid-rows-2 w-full h-full  max-w-screen max-h-screen">
+        {(!selected || selected === "North") && (
+          <Cam
+            label="North"
+            baseUrl="http://ssycwebcam.dyndns.org:1229/cgi-bin/view/image?pro_0&"
+            interval={interval}
+            className={twMerge(
+              selected === "North" &&
+                "col-span-full row-span-full col-start-0 row-start-0",
+            )}
+            onClick={() => update("North")}
+          />
+        )}
+        {(!selected || selected === "East") && (
+          <Cam
+            label="East"
+            baseUrl="http://ssycwebcam.dyndns.org:1228/cgi-bin/view/image?pro_0&"
+            interval={interval}
+            className={twMerge(
+              selected === "East" &&
+                "col-span-full row-span-full col-start-0 row-start-0",
+            )}
+            onClick={() => update("East")}
+          />
+        )}
+        {(!selected || selected === "South") && (
+          <Cam
+            label="South"
+            baseUrl="http://ssycwebcam.dyndns.org:1230/cgi-bin/view/image?pro_0&"
+            interval={interval}
+            className={twMerge(
+              selected === "South" &&
+                "col-span-full row-span-full col-start-0 row-start-0",
+            )}
+            onClick={() => update("South")}
+          />
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
