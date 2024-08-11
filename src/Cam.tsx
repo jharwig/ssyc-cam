@@ -32,20 +32,27 @@ function Cam({
 
   useEffect(() => {
     let timer: number | undefined;
+    let cancel = false;
 
     async function delay(wait: number) {
       timer = window.setTimeout(
         async () => {
-          const { url, duration } = await loadImage(baseUrl);
+          if (cancel) return;
+          const { url } = await loadImage(baseUrl);
+          if (cancel) return;
           setSrc(url);
-          void delay(interval - duration);
+          // void delay(interval - duration);
+          void delay(interval);
         },
         Math.max(0, wait),
       );
     }
 
-    delay(0);
-    return () => clearTimeout(timer);
+    delay(interval);
+    return () => {
+      cancel = true;
+      clearTimeout(timer);
+    };
   }, [baseUrl, interval]);
 
   return (
@@ -53,6 +60,8 @@ function Cam({
       className={twMerge("object-contain h-full w-full", className)}
       style={{ viewTransitionName: label }}
       src={src || baseUrl}
+      width={640}
+      height={360}
       onClick={onClick}
     />
   );
