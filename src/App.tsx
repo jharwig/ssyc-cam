@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 
 type Label = "North" | "East" | "South";
 function App() {
-  const [interval] = useState(1000);
+  const [interval] = useState(250);
   const [selected, setSelected] = useState<Label | null>(null);
 
   const update = (label: Label) => {
@@ -23,7 +23,7 @@ function App() {
 
   return (
     <div className="h-screen bg-black flex items-center justify-center">
-      <div className="grid grid-cols-2 grid-rows-2 w-full h-full  max-w-screen max-h-screen">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-1 w-full h-full  max-w-screen max-h-screen">
         {(!selected || selected === "North") && (
           <Cam
             label="North"
