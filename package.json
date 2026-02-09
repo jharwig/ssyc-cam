@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:github": "npm run build",
+    "deploy:cloudflare": "npx wrangler deploy",
+    "deploy": "npm run deploy:github && npm run deploy:cloudflare",
+    "deploy:all": "npm run deploy:github && git add docs && (git diff --cached --quiet || git commit -m \"chore: update docs for github pages\") && git push origin main && npm run deploy:cloudflare"
   },
   "dependencies": {
     "react": "^18.3.1",

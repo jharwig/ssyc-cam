@@ -4,14 +4,15 @@ import { twMerge } from "tailwind-merge";
 async function loadImage(baseUrl: string) {
   return new Promise<{ url: string; duration: number }>((resolve, reject) => {
     const start = Date.now();
-    const url = baseUrl + start;
+    const url = new URL(baseUrl);
+    url.searchParams.set("_ts", String(start));
     const image = new Image();
     image.onload = () => {
       const duration = Date.now() - start;
-      resolve({ url, duration });
+      resolve({ url: url.toString(), duration });
     };
     image.onerror = reject;
-    image.src = url;
+    image.src = url.toString();
   });
 }
 
