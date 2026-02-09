@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { flushSync } from "react-dom";
 import { buildCameraUrl, CAMERA_ORDER, type CameraId } from "./cameras";
 function App() {
-  const [interval] = useState(100);
+  const [interval] = useState(1000);
   const [selected, setSelected] = useState<CameraId | null>(null);
   const [res, setRes] = useState<"high" | "low">("low");
 
